@@ -23,8 +23,11 @@ function myTweets() {
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (!error) {
             for (i = 0; i < 20; i++) {
-                console.log(tweets[i].text);
-                console.log("______________________________________________________________________________________________");
+
+                console.log("Tweet " + i + ": " + tweets[i].text);
+                console.log();
+                fs.appendFile("log.txt", ", "+tweets[i].text);
+
             }
         }
     });
@@ -34,6 +37,7 @@ function myTweets() {
 }
 
 function spotifySong(song) {
+    //var song = JSON.parse(song);
     //setup client and make request
     spotify.search({
         type: 'track',
@@ -44,7 +48,11 @@ function spotifySong(song) {
             return;
         }
 
-        console.log(song);
+        console.log("Artist: " + song.tracks.items[0].artists[0].name);
+        console.log("Song: " + option);
+        console.log("Album that " + option + " is on: " + song.tracks.items[0].album.name);
+        console.log("Preview of " + option + ": " + song.tracks.items[0].preview_url);
+        fs.appendFile("log.txt",", "+option);
     });
     //console log object
     //loop through object for:
@@ -59,39 +67,46 @@ function movie(title) {
     request("http://www.omdbapi.com/?t=" + title + "&tomatoes=true", function(error, response, body) {
         var body = JSON.parse(body);
         if ('statusCode:', response && response.statusCode) {
-            console.log(body.Title);
-            console.log(body.Year);
-            console.log(body.imdbRating);
-            console.log(body.Country);
-            console.log(body.Language);
-            console.log(body.Plot);
-            console.log(body.Actors);
-            console.log(body.tomatoRating);
-            console.log(body.tomatoURL);
+            console.log("Movie Title: " + body.Title);
+            console.log("Year this movie came out: " + body.Year);
+            console.log("Rating on IMDB: " + body.imdbRating);
+            console.log("Countries: " + body.Country);
+            console.log("Original language of the film: " + body.Language);
+            console.log("Plot: " + body.Plot);
+            console.log("Main actors: " + body.Actors);
+            console.log("Rotten Tomato Rating: " + body.tomatoRating);
+            console.log("Link to Rotten Tomatoes: " + body.tomatoURL);
+            fs.appendFile("log.txt", ", "+body.Title);
         } else {
             console.log('error:', error);
         }
 
-    });;
-    //http://www.omdbapi.com/?t=matrix&tomatoes=true
-    //grab results
-    //pretty results
-    //display resutls
-    //* Title of the movie.
-    //* Year the movie came out.
-    //* IMDB Rating of the movie.
-    //* Country where the movie was produced.
-    //* Language of the movie.
-    //* Plot of the movie.
-    //* Actors in the movie.
-    //* Rotten Tomatoes Rating.
-    //* Rotten Tomatoes URL.
+    });
 }
 
 function doWhatItSays() {
     //read txt file (fs) and save that to variable
     //grab the command, grab the second input if there is one
     //switch based on the command (3 cases)
+    fs.readFile("random.txt", "utf8", function(err, info) {
+
+
+        data = info.split(",");
+        input = data[0];
+        option = data[1];
+        switch (input) {
+            case "my-tweets":
+                myTweets();
+                break;
+            case "spotify-this-song":
+                spotifySong(option);
+                break;
+            case "movie-this":
+                movie(option);
+
+        }
+        fs.appendFile("log.txt", ", "+option);
+    });
 }
 
 
