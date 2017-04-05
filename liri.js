@@ -26,7 +26,11 @@ function myTweets() {
 
                 console.log("Tweet " + i + ": " + tweets[i].text);
                 console.log();
-                fs.appendFile("log.txt", ", "+tweets[i].text);
+                fs.appendFile("log.txt", "\n" + tweets[i].text, function(error) {
+                    if (error) {
+                        console.log(error);
+                    }
+                });
 
             }
         }
@@ -39,6 +43,10 @@ function myTweets() {
 function spotifySong(song) {
     //var song = JSON.parse(song);
     //setup client and make request
+    if (song === undefined) {
+        song = "The Sign";
+    }
+
     spotify.search({
         type: 'track',
         query: song
@@ -52,7 +60,11 @@ function spotifySong(song) {
         console.log("Song: " + option);
         console.log("Album that " + option + " is on: " + song.tracks.items[0].album.name);
         console.log("Preview of " + option + ": " + song.tracks.items[0].preview_url);
-        fs.appendFile("log.txt",", "+option);
+        fs.appendFile("log.txt", "\n" + option, function(error) {
+            if (error) {
+                console.log(error);
+            }
+        });
     });
     //console log object
     //loop through object for:
@@ -63,9 +75,13 @@ function spotifySong(song) {
 }
 
 function movie(title) {
+    if (title === undefined) {
+        title = "Mr. Nobody";
+    }
     //setup query string for OMDB API call (option)
     request("http://www.omdbapi.com/?t=" + title + "&tomatoes=true", function(error, response, body) {
         var body = JSON.parse(body);
+
         if ('statusCode:', response && response.statusCode) {
             console.log("Movie Title: " + body.Title);
             console.log("Year this movie came out: " + body.Year);
@@ -76,7 +92,11 @@ function movie(title) {
             console.log("Main actors: " + body.Actors);
             console.log("Rotten Tomato Rating: " + body.tomatoRating);
             console.log("Link to Rotten Tomatoes: " + body.tomatoURL);
-            fs.appendFile("log.txt", ", "+body.Title);
+            fs.appendFile("log.txt", "\n" + body.Title, function(error) {
+                if (error) {
+                    console.log(error);
+                }
+            });
         } else {
             console.log('error:', error);
         }
@@ -105,7 +125,11 @@ function doWhatItSays() {
                 movie(option);
 
         }
-        fs.appendFile("log.txt", ", "+option);
+        fs.appendFile("log.txt", "\n" + option, function(error) {
+            if (error) {
+                console.log(error);
+            }
+        });
     });
 }
 
