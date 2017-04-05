@@ -90,7 +90,7 @@ function movie(title) {
             console.log("Original language of the film: " + body.Language);
             console.log("Plot: " + body.Plot);
             console.log("Main actors: " + body.Actors);
-            console.log("Rotten Tomato Rating: " + body.tomatoRating);
+            console.log("Rotten Tomato Rating: " + body.Ratings[1].Value);
             console.log("Link to Rotten Tomatoes: " + body.tomatoURL);
             fs.appendFile("log.txt", "\n" + body.Title, function(error) {
                 if (error) {
