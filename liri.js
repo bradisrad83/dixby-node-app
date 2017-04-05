@@ -136,8 +136,10 @@ function doWhatItSays() {
 
 
 //todo: sanitize inputs
-var input = process.argv[2]; //what we need to call
-var option = process.argv[3]; //second set of input, if we need
+var cleaner = process.argv.slice(2);
+var input = cleaner[0]; //what we need to call
+var option = cleaner.slice(1).join(" "); //second set of input, if we need
+
 //switch statement
 switch (input) {
     case "my-tweets":
